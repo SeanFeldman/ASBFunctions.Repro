@@ -19,8 +19,10 @@ public class AzureServiceBusTriggerFunction
         ILogger logger,
         ExecutionContext executionContext)
     {
+        var directoryToScan = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
+        logger.LogDebug($">>>>>>>>>>{directoryToScan}");
+
         // var assembly = System.Reflection.Assembly.Load("Handlers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-        var environmentVariable = Environment.GetEnvironmentVariable("AzureWebJobsScriptRoot");
         await endpoint.Process(message, executionContext, logger);
     }
 
