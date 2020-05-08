@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -19,8 +20,16 @@ public class AzureServiceBusTriggerFunction
         ILogger logger,
         ExecutionContext executionContext)
     {
-        var directoryToScan = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
-        logger.LogDebug($">>>>>>>>>>{directoryToScan}");
+        var paths = new
+        {
+            RelativeSearchPath = AppDomain.CurrentDomain.RelativeSearchPath,
+            BaseDirectory = AppDomain.CurrentDomain.BaseDirectory,
+            FunctionDirectory = executionContext.FunctionDirectory,
+            FunctionAppDirectory = executionContext.FunctionAppDirectory,
+            Bin = Path.Combine(executionContext.FunctionAppDirectory, "bin")
+        };
+
+        logger.LogWarning($">>><<<< {paths}");
 
         // var assembly = System.Reflection.Assembly.Load("Handlers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
         await endpoint.Process(message, executionContext, logger);
