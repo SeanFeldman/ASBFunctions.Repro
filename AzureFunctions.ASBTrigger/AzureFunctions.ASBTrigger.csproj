@@ -13,6 +13,7 @@
     <PackageReference Include="NServiceBus.AzureFunctions.ServiceBus" Version="0.1.1" />
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.1.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.5" />
+    <PackageReference Include="NServiceBus" Version="7.3.0-alpha.141" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AzureFunctions.Messages\AzureFunctions.Messages.csproj" />

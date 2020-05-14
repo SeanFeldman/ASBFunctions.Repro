@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using NServiceBus;
 using System.Threading.Tasks;
 using NServiceBus.AzureFunctions.ServiceBus;
+using NServiceBus.Configuration.AdvancedExtensibility;
 
 public class AzureServiceBusTriggerFunction
 {
@@ -39,7 +40,7 @@ public class AzureServiceBusTriggerFunction
 
     #region EndpointSetup
 
-    static readonly FunctionEndpoint endpoint = new FunctionEndpoint(executionContext =>
+    private static readonly FunctionEndpoint endpoint = new FunctionEndpoint(executionContext =>
     {
         var configuration = new ServiceBusTriggeredEndpointConfiguration(EndpointName);
         configuration.UseSerialization<NewtonsoftSerializer>();
@@ -51,10 +52,8 @@ public class AzureServiceBusTriggerFunction
             return Task.CompletedTask;
         });
 
-        configuration.AdvancedConfiguration.AssemblyScanner().ScanAssembliesInNestedDirectories = true;
-
-        //var x = AppDomain.CurrentDomain.BaseDirectory;
-        //var x = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+        configuration.AdvancedConfiguration.AssemblyScanner().ScanAppDomainAssemblies = false;// >> we don't need to scan appdomain <<
+        configuration.AdvancedConfiguration.GetSettings().Set("Functions", Path.Combine(executionContext.ExecutionContext.FunctionAppDirectory, "bin"));
 
         return configuration;
     });
